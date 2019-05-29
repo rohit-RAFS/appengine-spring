@@ -56,7 +56,7 @@ public class ValidateOtp {
 
         try {
 
-            URL transactionURL= new URL("https://accounts.paytm.com/signin/validate/otp");
+            URL transactionURL= new URL("https://accounts-uat.paytm.com/signin/validate/otp");
 
             JSONObject obj = new JSONObject(paytmParams);
             String postData = obj.toString();
