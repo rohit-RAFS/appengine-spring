@@ -18,7 +18,16 @@ public class SendOtp {
 	String scope = "wallet";
 	String responseType = "token";
 	String merchantKey = "&!vj74@Ri&g6U1TI";
-	
+	String responseData;
+
+	public String getResponseData() {
+		return responseData;
+	}
+
+	public void setResponseData(String responseData) {
+		this.responseData = responseData;
+	}
+
 	public SendOtp(String email, String phone) {
 		this.email = email;
 		this.phone = phone;
@@ -48,7 +57,7 @@ public class SendOtp {
 			DataOutputStream requestWriter = new DataOutputStream(connection.getOutputStream());
 			requestWriter.writeBytes(postData);
 			requestWriter.close();
-			String responseData = "";
+
 			InputStream is = connection.getInputStream();
 			BufferedReader responseReader = new BufferedReader(new InputStreamReader(is));
 			if ((responseData = responseReader.readLine()) != null) {
@@ -56,7 +65,7 @@ public class SendOtp {
 			}
 			System.out.append("Requested Json = " + postData + " ");
 			responseReader.close();
-			//return responseData;
+
 		} catch (Exception exception) {
 			exception.printStackTrace();
 		}

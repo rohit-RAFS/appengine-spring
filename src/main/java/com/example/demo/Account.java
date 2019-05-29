@@ -1,11 +1,11 @@
 package com.example.demo;
 
-public class PhoneNumber {
+public class Account {
 	
 	private final long id;
 	private final String content;
 	
-	public PhoneNumber(long id, String content) {
+	public Account(long id, String content) {
 		this.id = id;
 		this.content = content;
 	}
