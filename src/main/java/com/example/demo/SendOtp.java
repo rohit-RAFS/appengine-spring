@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.Model.DatabaseController;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -8,6 +9,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.TreeMap;
 
 public class SendOtp {
@@ -65,7 +68,17 @@ public class SendOtp {
 			}
 			System.out.append("Requested Json = " + postData + " ");
 			responseReader.close();
-
+			
+			
+			Connection conn = DatabaseController.getConnection();
+			PreparedStatement setState = conn.prepareStatement(
+					"INSERT INTO OtpState (U_ID, U_State) VALUES (?, ?);");
+			setState.setString(1, phone + responseData );
+			setState.setString(2, responseData);
+			// TODO Set NUMBER & state
+			// Finally, execute the statement. If it fails, an error will be thrown.
+			setState.execute();
+			
 		} catch (Exception exception) {
 			exception.printStackTrace();
 		}
