@@ -17,6 +17,11 @@
 
 	<properties>
 		<java.version>1.8</java.version>
+
+		<INSTANCE_CONNECTION_NAME>micro-s-perpule:us-central1:otp-validation</INSTANCE_CONNECTION_NAME>
+		<user>test</user>
+		<password>anish</password>
+		<database>otpverify</database>
 	</properties>
 
 	<dependencies>
@@ -31,6 +36,11 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.google.cloud.sql</groupId>
+			<artifactId>mysql-socket-factory-connector-j-8</artifactId>
+			<version>1.0.13</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
@@ -39,6 +49,17 @@
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>20180813</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.16</version>
+		</dependency>
+		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+			<version>2.6.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
