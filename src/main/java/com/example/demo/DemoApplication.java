@@ -20,6 +20,11 @@ public class DemoApplication {
 		return "hello world!";
 	}
 	
+	@GetMapping("/")
+	public String greet(){
+		return "YAHA KUCH BHI NAHI HAI";
+	}
+	
 	private static final String template = "%s";
 	private final AtomicLong counter = new AtomicLong();
 	
