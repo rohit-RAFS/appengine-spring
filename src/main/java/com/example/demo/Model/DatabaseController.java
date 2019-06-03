@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 
 public class DatabaseController {
 	
+<<<<<<< HEAD
 	private static final Logger LOGGER = Logger.getLogger(DatabaseController.class.getName());
 	
 	
@@ -29,11 +30,21 @@ public class DatabaseController {
 	
 	private static Connection createConnectionPool() throws ClassNotFoundException, SQLException, IllegalAccessException, InstantiationException {
 		
+=======
+
+	private static String DB_NAME = "otpverify", DB_USER = "test", DB_PASS = "anish";
+	private static final Logger LOGGER = Logger.getLogger(DatabaseController.class.getName());
+	private static String url=null;
+	
+	private static Connection createConnectionPool() throws ClassNotFoundException,SQLException,IllegalAccessException,InstantiationException{
+
+>>>>>>> 1eb1fcc520566b982b995d709376b67eff234169
 		String CLOUD_SQL_CONNECTION_NAME = System.getenv(
 				"CLOUD_SQL_INSTANCE_NAME");
 		String DB_USER = System.getenv("DB_USER");
 		String DB_PASS = System.getenv("DB_PASS");
 		String DB_NAME = System.getenv("DB_NAME");
+<<<<<<< HEAD
 		
 		LOGGER.info("Database Name:" + DB_NAME + "Database User:" + DB_USER + "Cloud Instance:" + CLOUD_SQL_CONNECTION_NAME);
 		
@@ -64,26 +75,46 @@ public class DatabaseController {
 //			pool = new HikariDataSource(config);
 		
 		// jdbc:google:mysql://perpule-1248:us-central1:perpule-sql/perpule_prod?user=backend&password=b@ck3nd
+=======
+
+		LOGGER.info("Database Name:" + DB_NAME + "Database User:" + DB_USER + "Cloud Instance:" + CLOUD_SQL_CONNECTION_NAME);
+
+>>>>>>> 1eb1fcc520566b982b995d709376b67eff234169
 		url = "jdbc:google:mysql://micro-s-perpule:us-central1:otp-validation/otpverify?user=test&password=anish";
 		Class.forName("com.mysql.jdbc.GoogleDriver").newInstance();
 		Connection conn = DriverManager.getConnection(url);
 		return conn;
+<<<<<<< HEAD
 		
 		//TODO Local Deployment
 //		config.setDriverClassName("com.mysql.jdbc.Driver");
 //
 //		config.setJdbcUrl(String.format("jdbc:mysql://35.225.50.95:3306/%s", DB_NAME));
+=======
+
+>>>>>>> 1eb1fcc520566b982b995d709376b67eff234169
 	}
 	
 	
 	private DatabaseController(){}
 	
 	
+<<<<<<< HEAD
 	public static Connection getConnection() throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		if(url == null){
 			createConnectionPool();
 		}
 		return  DriverManager.getConnection(url);
+=======
+	public static Connection getConnection() throws SQLException {
+		if(url == null){
+			try{
+				createConnectionPool();
+			}
+			catch (Exception e){}
+		}
+		return DriverManager.getConnection(url);
+>>>>>>> 1eb1fcc520566b982b995d709376b67eff234169
 	}
 	
 }
