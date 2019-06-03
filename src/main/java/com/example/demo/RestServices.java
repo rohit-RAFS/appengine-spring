@@ -28,7 +28,6 @@ public class RestServices implements ErrorController {
 	private final AtomicLong counter = new AtomicLong();
 	Account account;
 	SendOtpResponse otpresponse;
-	ValidateOtpResponse validateOtpResponse;
 
 	//For a NULL Page
 	@GetMapping("/")
@@ -81,7 +80,7 @@ public class RestServices implements ErrorController {
 	}
 
 	@RequestMapping("/validateotp")
-	public ValidateOtpResponse validatingotp(@RequestParam(value="number", defaultValue="111111") String number,@RequestParam(value="otp", defaultValue="111111") String otp) {
+	public ValidateOtpResponse validatingotp(@RequestParam(value="number", defaultValue="0") String number,@RequestParam(value="otp", defaultValue="111111") String otp) {
 		ValidateOtp votp =new ValidateOtp(number,otp);
 		votp.validate_OTP();
 		Gson g=new Gson();
@@ -89,17 +88,45 @@ public class RestServices implements ErrorController {
 		return validateOtpResponse;
 	}
 
+
+	ValidateOtpResponse validateOtpResponse;
+	ValidateTokenResponse validateTokenResponse;
+	AutoDebitResponse autoDebitResponse;
+
 	@RequestMapping("/validatetoken")
-	public String validatingtoken(){
-		ValidateToken token=new ValidateToken(validateOtpResponse.getAccess_token());
+	public String validatingtoken(@RequestParam(value="number", defaultValue="0") String number){
+		ValidateToken token=new ValidateToken(number);
 		token.validate_token();
 		return token.getResponseData();
 	}
 
 	@RequestMapping("/checkbalance")
-	public String checkingbalance(){
-		CheckBalance check=new CheckBalance(validateOtpResponse.getAccess_token());
+	public String checkingbalance(@RequestParam(value="number", defaultValue="0") String number,@RequestParam(value="totalamount", defaultValue="0.00") String totalamount){
+		CheckBalance check=new CheckBalance(number,totalamount);
 		check.check_balance();
 		return check.getResponseData();
+	}
+
+	@RequestMapping("/revokeaccess")
+	public String revokingaccess(){
+		RevokeAccess revoke=new RevokeAccess(validateOtpResponse.getAccess_token());
+		revoke.revoke_access();
+		return revoke.getResponseData();
+	}
+
+	@RequestMapping("/autodebit")
+	public AutoDebitResponse debiting(@RequestParam(value="amount", defaultValue="0.00") String amount) {
+		AutoDebit deb =new AutoDebit(validateTokenResponse.getMobile(),amount);
+		deb.auto_debit();
+		Gson g=new Gson();
+		autoDebitResponse= g.fromJson(deb.getResponseData(),AutoDebitResponse.class);
+		return autoDebitResponse;
+	}
+
+	@RequestMapping("/transactionstatus")
+	public String txnstatus(){
+		TransactionStatus stat=new TransactionStatus();
+		stat.transaction_status();
+		return stat.getResponseData();
 	}
 }

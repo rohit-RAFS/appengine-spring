@@ -99,7 +99,7 @@ public class ValidateOtp {
             responseReader.close();
 
             //writing accesstoken
-
+            //TODO error handling for failure response
             Connection conn = DatabaseController.getConnection();
             Gson g=new Gson();
             ValidateOtpResponse validateOtpResponse= g.fromJson(responseData,ValidateOtpResponse.class);
