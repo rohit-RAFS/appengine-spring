@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.example.demo.Model.DatabaseController;
+import com.google.gson.Gson;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -11,7 +12,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.TreeMap;
+import java.util.logging.Logger;
 
 public class SendOtp {
 	
@@ -22,6 +25,8 @@ public class SendOtp {
 	String responseType = "token";
 	String merchantKey = "&!vj74@Ri&g6U1TI";
 	String responseData;
+	private static final Logger LOGGER = Logger.getLogger(DatabaseController.class.getName());
+
 
 	public String getResponseData() {
 		return responseData;
@@ -68,17 +73,49 @@ public class SendOtp {
 			}
 			System.out.append("Requested Json = " + postData + " ");
 			responseReader.close();
-			
-			
+
+
+			//Saving state from response received for particular phone number
 			Connection conn = DatabaseController.getConnection();
-			PreparedStatement setState = conn.prepareStatement(
-					"INSERT INTO OtpState (U_ID, U_State) VALUES (?, ?);");
-			setState.setString(1, phone + responseData );
-			setState.setString(2, responseData);
-			// TODO Set NUMBER & state
-			// Finally, execute the statement. If it fails, an error will be thrown.
-			setState.execute();
+
+
+			PreparedStatement getstmt=conn.prepareStatement("SELECT * FROM Customer WHERE PhoneNumber LIKE ?");
+			getstmt.setString(1, "%"+phone+"%");
+			ResultSet rs=getstmt.executeQuery();
+			SQLTableEntry sl= new SQLTableEntry();
+			sl.SQLRetrieve(rs);
+
 			
+			//INSERTING ONLY IF NUMBER EXIST / ACCESS TOKEN ALREADY NOT AVAILABLE
+			if (sl.getAccessToken()==null) {
+				if (sl.getPhoneNumber()==null) {
+					Gson g = new Gson();
+					String state = g.fromJson(responseData, SendOtpResponse.class).getState();
+					PreparedStatement setstmt = conn.prepareStatement(
+							"INSERT INTO Customer (PhoneNumber, AccessToken, State) VALUES (?, ?,?);");
+					setstmt.setString(1, phone);
+					setstmt.setString(2, null);
+					setstmt.setString(3, state);
+					setstmt.execute();
+				}
+				else{
+					Gson g = new Gson();
+					String state = g.fromJson(responseData, SendOtpResponse.class).getState();
+					PreparedStatement setstmt = conn.prepareStatement(
+							"UPDATE Customer SET AccessToken = ?, State = ? WHERE PhoneNumber LIKE ?;");
+					setstmt.setString(1, null);
+					setstmt.setString(2, state);
+					setstmt.setString(3, "%"+phone+"%");
+					setstmt.execute();
+
+				}
+			}
+
+
+			
+
+
+
 		} catch (Exception exception) {
 			exception.printStackTrace();
 		}
